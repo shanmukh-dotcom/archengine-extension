@@ -4,7 +4,7 @@
 ![VS Code Extension](https://img.shields.io/badge/VS_Code-Extension-007ACC?style=for-the-badge&logo=visualstudiocode)
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-AutoDev is not just another scaffolding tool—it is a **Project Architecture Engine** designed for VS Code. Instead of writing boilerplate, AutoDev intelligently builds, expands, mentors, and tracks your software lifecycle from Day 1 to deployment.
+AutoDev is not just another scaffolding tool—it is a **Project Architecture Engine** designed for VS Code. Instead of writing repetitive setup code, AutoDev intelligently builds, expands, mentors, and tracks your software lifecycle from Day 1 to deployment.
 
 ## ✨ Features
 
@@ -51,4 +51,4 @@ Access these via the VS Code Command Palette (`Ctrl+Shift+P`):
 - `AutoDev: Push to GitHub` - Automates the Git push pipeline.
 
 ---
-*Built for Engineers, by Engineers. Build Software, Not Boilerplate.*
+*Built for Engineers, by Engineers. Build Software Faster.*
