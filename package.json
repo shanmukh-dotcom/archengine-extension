@@ -1,0 +1,66 @@
+{
+  "name": "autodev",
+  "displayName": "AutoDev",
+  "description": "Project Architecture Engine. Build Software, Not Boilerplate.",
+  "publisher": "codecam-creator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/autodev/autodev"
+  },
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension/activation.js",
+  "contributes": {
+    "configuration": {
+      "title": "AutoDev",
+      "properties": {
+        "autodev.geminiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API Key for Gemini (Leave blank for Pure Logic mode)"
+        },
+        "autodev.githubRepoUrl": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub Repository URL for this project (e.g., https://github.com/user/repo.git)"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "autodev.scaffoldProject",
+        "title": "AutoDev: Generate Architecture Blueprint"
+      },
+      {
+        "command": "autodev.startSession",
+        "title": "AutoDev: Start/Stop Coding Session"
+      },
+      {
+        "command": "autodev.logNote",
+        "title": "AutoDev: Log Developer Note"
+      },
+      {
+        "command": "autodev.generateResume",
+        "title": "AutoDev: Generate Developer Resume"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "18.x",
+    "typescript": "^5.1.3"
+  }
+}
