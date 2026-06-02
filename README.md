@@ -1,4 +1,4 @@
-# AutoDev: Senior Architecture & Mentorship Engine 🚀
+# AutoDev: Project Architecture Engine 🚀
 
 ![AutoDev Banner](https://img.shields.io/badge/AutoDev-Architecture_Engine-blue?style=for-the-badge)
 ![VS Code Extension](https://img.shields.io/badge/VS_Code-Extension-007ACC?style=for-the-badge&logo=visualstudiocode)
