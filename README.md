@@ -50,5 +50,16 @@ Access these via the VS Code Command Palette (`Ctrl+Shift+P`):
 - `AutoDev: Generate Developer Resume` - Generates the Case Study markdown.
 - `AutoDev: Push to GitHub` - Automates the Git push pipeline.
 
+### 💡 Example Prompts to Test
+Not sure what to type when scaffolding or expanding? Try these exact phrases:
+
+**For V1 Scaffolding (In an empty folder):**
+- *"Build a Next.js application with a PostgreSQL database."*
+- *"Create a simple Express backend with MongoDB."*
+
+**For V2 Expansion (In an existing project folder):**
+- *"Add a MongoDB database connection."*
+- *"Add a PostgreSQL configuration file."*
+
 ---
 *Built for Engineers, by Engineers. Build Software Faster.*
