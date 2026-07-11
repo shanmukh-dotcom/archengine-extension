@@ -40,8 +40,8 @@ export class ReviewPanel {
     }
 
     const panel = vscode.window.createWebviewPanel(
-      'autodevReview',
-      'AutoDev Architecture Review',
+      'archengineReview',
+      'ArchEngine Architecture Review',
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,

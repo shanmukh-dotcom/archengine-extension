@@ -13,11 +13,11 @@ class GitEngine {
     async pushToGitHub(rootPath) {
         const repoUrl = settings_1.SettingsService.getGithubRepoUrl();
         if (!repoUrl || repoUrl.trim() === '') {
-            vscode.window.showErrorMessage('AutoDev: Please configure your GitHub Repository URL in the settings first.');
+            vscode.window.showErrorMessage('ArchEngine: Please configure your GitHub Repository URL in the settings first.');
             return;
         }
         try {
-            vscode.window.showInformationMessage('AutoDev: Initializing and pushing to GitHub...');
+            vscode.window.showInformationMessage('ArchEngine: Initializing and pushing to GitHub...');
             // 1. Check if git exists
             const gitPath = path.join(rootPath, '.git');
             try {
@@ -33,7 +33,7 @@ class GitEngine {
             await execAsync('git add .', { cwd: rootPath });
             // Commit might fail if there are no changes, so we catch it silently
             try {
-                await execAsync('git commit -m "AutoDev: Architecture & Features update"', { cwd: rootPath });
+                await execAsync('git commit -m "ArchEngine: Architecture & Features update"', { cwd: rootPath });
             }
             catch (err) {
                 if (!err.message.includes('nothing to commit')) {
@@ -63,17 +63,17 @@ class GitEngine {
             catch (err) {
                 throw new Error(`Failed to push: ${err.message}`);
             }
-            vscode.window.showInformationMessage('AutoDev: Successfully pushed to GitHub!');
+            vscode.window.showInformationMessage('ArchEngine: Successfully pushed to GitHub!');
             logger_1.Logger.info('Successfully pushed to GitHub.');
         }
         catch (error) {
             logger_1.Logger.error('Git push failed', error);
             // Handle the case where Git is simply not installed
             if (error.message && error.message.includes('ENOENT')) {
-                vscode.window.showErrorMessage('AutoDev: Git is not installed or not found in your system path. Please install Git to use this feature.');
+                vscode.window.showErrorMessage('ArchEngine: Git is not installed or not found in your system path. Please install Git to use this feature.');
             }
             else {
-                vscode.window.showErrorMessage(`AutoDev GitHub Error: ${error.message}`);
+                vscode.window.showErrorMessage(`ArchEngine GitHub Error: ${error.message}`);
             }
         }
     }

@@ -14,7 +14,7 @@ import { GitEngine } from '../core/gitEngine';
 
 export function activate(context: vscode.ExtensionContext) {
   Logger.init();
-  Logger.info('AutoDev Project Architecture Engine Activated.');
+  Logger.info('ArchEngine Project Architecture Engine Activated.');
 
   const promptEngine = new PromptEngine();
   const blueprintEngine = new BlueprintEngine();
@@ -22,11 +22,11 @@ export function activate(context: vscode.ExtensionContext) {
   const contextEngine = new ContextEngine();
   const advisorEngine = new AdvisorEngine();
 
-  const scaffoldCmd = vscode.commands.registerCommand('autodev.scaffoldProject', async () => {
+  const scaffoldCmd = vscode.commands.registerCommand('archengine.scaffoldProject', async () => {
     
     const contextInfo = await contextEngine.analyzeWorkspace();
     if (!contextInfo.rootPath) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder to generate or expand a project.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate or expand a project.');
       return;
     }
 
@@ -39,14 +39,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     if (!input) return;
 
-    vscode.window.showInformationMessage('AutoDev: Analyzing project intent...');
+    vscode.window.showInformationMessage('ArchEngine: Analyzing project intent...');
     
     try {
       const intent = await promptEngine.processPrompt(input);
       const blueprint = blueprintEngine.generateBlueprint(intent);
       
       // Generate Architecture Advice
-      vscode.window.showInformationMessage('AutoDev: Generating Architectural Advice...');
+      vscode.window.showInformationMessage('ArchEngine: Generating Architectural Advice...');
       const advice = await advisorEngine.generateAdvice(intent);
       blueprint.files.push({
         path: 'ARCHITECTURE.md',
@@ -58,15 +58,15 @@ export function activate(context: vscode.ExtensionContext) {
       await ReviewPanel.createOrShow(context.extensionPath, blueprint, generationEngine);
     } catch (err: any) {
       Logger.error('Scaffold failed:', err);
-      vscode.window.showErrorMessage(`AutoDev Error: ${err.message}`);
+      vscode.window.showErrorMessage(`ArchEngine Error: ${err.message}`);
     }
   });
 
   const sessionEngine = new SessionEngine();
-  const sessionCmd = vscode.commands.registerCommand('autodev.startSession', async () => {
+  const sessionCmd = vscode.commands.registerCommand('archengine.startSession', async () => {
     const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     if (!rootPath) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder to start a coding session.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder to start a coding session.');
       return;
     }
 
@@ -76,10 +76,10 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   const notesEngine = new NotesEngine();
-  const notesCmd = vscode.commands.registerCommand('autodev.logNote', async () => {
+  const notesCmd = vscode.commands.registerCommand('archengine.logNote', async () => {
     const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     if (!rootPath) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder to log developer notes.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder to log developer notes.');
       return;
     }
 
@@ -88,20 +88,20 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   const resumeGenerator = new ResumeGenerator();
-  const resumeCmd = vscode.commands.registerCommand('autodev.generateResume', async () => {
+  const resumeCmd = vscode.commands.registerCommand('archengine.generateResume', async () => {
     const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     if (!rootPath) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder to generate a developer resume.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate a developer resume.');
       return;
     }
     await resumeGenerator.generateResume(rootPath);
   });
 
   const gitEngine = new GitEngine();
-  const githubCmd = vscode.commands.registerCommand('autodev.pushToGithub', async () => {
+  const githubCmd = vscode.commands.registerCommand('archengine.pushToGithub', async () => {
     const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     if (!rootPath) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder before pushing to GitHub.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder before pushing to GitHub.');
       return;
     }
     await gitEngine.pushToGitHub(rootPath);

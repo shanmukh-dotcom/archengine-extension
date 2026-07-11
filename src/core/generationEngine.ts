@@ -8,7 +8,7 @@ export class GenerationEngine {
   public async generateWorkspace(blueprint: Blueprint): Promise<void> {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
-      vscode.window.showErrorMessage('AutoDev: Please open a folder to generate the project.');
+      vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate the project.');
       return;
     }
 
@@ -46,12 +46,12 @@ export class GenerationEngine {
         existingPkg = JSON.parse(pkgData);
         Logger.info('Found existing package.json. Merging dependencies...');
       } catch (jsonErr) {
-        vscode.window.showErrorMessage('AutoDev: Your existing package.json has a syntax error. We cannot safely expand this project. Please fix it and try again.');
+        vscode.window.showErrorMessage('ArchEngine: Your existing package.json has a syntax error. We cannot safely expand this project. Please fix it and try again.');
         return;
       }
     } catch {
       existingPkg = {
-        name: 'autodev-generated-project',
+        name: 'archengine-generated-project',
         version: '1.0.0',
         dependencies: {},
         devDependencies: {}
@@ -75,6 +75,6 @@ export class GenerationEngine {
     await fs.writeFile(packageJsonPath, JSON.stringify(existingPkg, null, 2), 'utf8');
     Logger.info('Updated: package.json');
 
-    vscode.window.showInformationMessage('AutoDev: Project successfully generated/expanded!');
+    vscode.window.showInformationMessage('ArchEngine: Project successfully generated/expanded!');
   }
 }

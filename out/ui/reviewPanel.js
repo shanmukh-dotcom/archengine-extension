@@ -37,7 +37,7 @@ class ReviewPanel {
             await ReviewPanel.currentPanel.update(blueprint);
             return;
         }
-        const panel = vscode.window.createWebviewPanel('autodevReview', 'AutoDev Architecture Review', column || vscode.ViewColumn.One, {
+        const panel = vscode.window.createWebviewPanel('archengineReview', 'ArchEngine Architecture Review', column || vscode.ViewColumn.One, {
             enableScripts: true,
             localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'src', 'ui'))]
         });

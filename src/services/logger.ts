@@ -5,9 +5,9 @@ export class Logger {
 
   public static init() {
     if (!this.channel) {
-      this.channel = vscode.window.createOutputChannel('AutoDev');
+      this.channel = vscode.window.createOutputChannel('ArchEngine');
     }
-    this.info('AutoDev Logger Initialized.');
+    this.info('ArchEngine Logger Initialized.');
   }
 
   public static info(message: string) {
@@ -26,7 +26,7 @@ export class Logger {
     if (this.channel) {
       this.channel.appendLine(`[${new Date().toISOString()}] [${level}] ${message}`);
     } else {
-      console.log(`[AutoDev][${level}] ${message}`);
+      console.log(`[ArchEngine][${level}] ${message}`);
     }
   }
 }

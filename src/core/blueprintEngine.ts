@@ -13,7 +13,7 @@ export class BlueprintEngine {
     // Base README
     files.push({
       path: 'README.md',
-      content: `# ${intent.projectType}\n\nGenerated dynamically by AutoDev Template Registry.\n\nFramework: ${intent.framework}\nDatabase: ${intent.database || 'None'}\nFeatures: ${intent.features.join(', ') || 'None'}`,
+      content: `# ${intent.projectType}\n\nGenerated dynamically by ArchEngine Template Registry.\n\nFramework: ${intent.framework}\nDatabase: ${intent.database || 'None'}\nFeatures: ${intent.features.join(', ') || 'None'}`,
       reason: 'Root documentation file outlining project stack.'
     });
 

@@ -10,7 +10,7 @@ interface SessionData {
 
 export class SessionEngine {
   private getStoragePath(rootPath: string): string {
-    return path.join(rootPath, '.autodev', 'session.json');
+    return path.join(rootPath, '.archengine', 'session.json');
   }
 
   public async startSession(rootPath: string): Promise<void> {
@@ -18,7 +18,7 @@ export class SessionEngine {
     data.lastStartTime = Date.now();
     await this.writeData(rootPath, data);
     Logger.info('Coding session started.');
-    vscode.window.showInformationMessage('AutoDev: Coding session started. Tracking time...');
+    vscode.window.showInformationMessage('ArchEngine: Coding session started. Tracking time...');
   }
 
   public async stopSession(rootPath: string): Promise<void> {
@@ -30,9 +30,9 @@ export class SessionEngine {
       data.lastStartTime = null;
       await this.writeData(rootPath, data);
       Logger.info(`Coding session stopped. Logged ${elapsedMinutes} minutes.`);
-      vscode.window.showInformationMessage(`AutoDev: Session stopped. Total time: ${data.totalMinutes} minutes.`);
+      vscode.window.showInformationMessage(`ArchEngine: Session stopped. Total time: ${data.totalMinutes} minutes.`);
     } else {
-      vscode.window.showWarningMessage('AutoDev: No active session found to stop.');
+      vscode.window.showWarningMessage('ArchEngine: No active session found to stop.');
     }
   }
 

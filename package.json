@@ -1,11 +1,11 @@
 {
-  "name": "autodev",
-  "displayName": "AutoDev",
+  "name": "archengine",
+  "displayName": "ArchEngine",
   "description": "Project Architecture Engine. Build Software Faster.",
   "publisher": "codecam-creator",
   "repository": {
     "type": "git",
-    "url": "https://github.com/autodev/autodev"
+    "url": "https://github.com/archengine/archengine"
   },
   "version": "0.1.0",
   "engines": {
@@ -18,14 +18,14 @@
   "main": "./out/extension/activation.js",
   "contributes": {
     "configuration": {
-      "title": "AutoDev",
+      "title": "ArchEngine",
       "properties": {
-        "autodev.geminiApiKey": {
+        "archengine.geminiApiKey": {
           "type": "string",
           "default": "",
           "description": "API Key for Gemini (Leave blank for Pure Logic mode)"
         },
-        "autodev.githubRepoUrl": {
+        "archengine.githubRepoUrl": {
           "type": "string",
           "default": "",
           "description": "GitHub Repository URL for this project (e.g., https://github.com/user/repo.git)"
@@ -34,20 +34,20 @@
     },
     "commands": [
       {
-        "command": "autodev.scaffoldProject",
-        "title": "AutoDev: Generate Architecture Blueprint"
+        "command": "archengine.scaffoldProject",
+        "title": "ArchEngine: Generate Architecture Blueprint"
       },
       {
-        "command": "autodev.startSession",
-        "title": "AutoDev: Start/Stop Coding Session"
+        "command": "archengine.startSession",
+        "title": "ArchEngine: Start/Stop Coding Session"
       },
       {
-        "command": "autodev.logNote",
-        "title": "AutoDev: Log Developer Note"
+        "command": "archengine.logNote",
+        "title": "ArchEngine: Log Developer Note"
       },
       {
-        "command": "autodev.generateResume",
-        "title": "AutoDev: Generate Developer Resume"
+        "command": "archengine.generateResume",
+        "title": "ArchEngine: Generate Developer Resume"
       }
     ]
   },

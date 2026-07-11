@@ -10,7 +10,7 @@ export interface DeveloperNote {
 
 export class NotesEngine {
   private getStoragePath(rootPath: string): string {
-    return path.join(rootPath, '.autodev', 'notes.json');
+    return path.join(rootPath, '.archengine', 'notes.json');
   }
 
   public async logNote(rootPath: string, content: string): Promise<void> {
@@ -25,7 +25,7 @@ export class NotesEngine {
     await fs.writeFile(p, JSON.stringify(notes, null, 2), 'utf8');
     
     Logger.info('Developer note logged successfully.');
-    vscode.window.showInformationMessage('AutoDev: Note logged!');
+    vscode.window.showInformationMessage('ArchEngine: Note logged!');
   }
 
   public async getNotes(rootPath: string): Promise<DeveloperNote[]> {

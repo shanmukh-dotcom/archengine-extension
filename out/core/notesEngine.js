@@ -7,7 +7,7 @@ const fs_1 = require("fs");
 const logger_1 = require("../services/logger");
 class NotesEngine {
     getStoragePath(rootPath) {
-        return path.join(rootPath, '.autodev', 'notes.json');
+        return path.join(rootPath, '.archengine', 'notes.json');
     }
     async logNote(rootPath, content) {
         const notes = await this.getNotes(rootPath);
@@ -19,7 +19,7 @@ class NotesEngine {
         await fs_1.promises.mkdir(path.dirname(p), { recursive: true });
         await fs_1.promises.writeFile(p, JSON.stringify(notes, null, 2), 'utf8');
         logger_1.Logger.info('Developer note logged successfully.');
-        vscode.window.showInformationMessage('AutoDev: Note logged!');
+        vscode.window.showInformationMessage('ArchEngine: Note logged!');
     }
     async getNotes(rootPath) {
         try {

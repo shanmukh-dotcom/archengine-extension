@@ -7,14 +7,14 @@ const fs_1 = require("fs");
 const logger_1 = require("../services/logger");
 class SessionEngine {
     getStoragePath(rootPath) {
-        return path.join(rootPath, '.autodev', 'session.json');
+        return path.join(rootPath, '.archengine', 'session.json');
     }
     async startSession(rootPath) {
         const data = await this.readData(rootPath);
         data.lastStartTime = Date.now();
         await this.writeData(rootPath, data);
         logger_1.Logger.info('Coding session started.');
-        vscode.window.showInformationMessage('AutoDev: Coding session started. Tracking time...');
+        vscode.window.showInformationMessage('ArchEngine: Coding session started. Tracking time...');
     }
     async stopSession(rootPath) {
         const data = await this.readData(rootPath);
@@ -25,10 +25,10 @@ class SessionEngine {
             data.lastStartTime = null;
             await this.writeData(rootPath, data);
             logger_1.Logger.info(`Coding session stopped. Logged ${elapsedMinutes} minutes.`);
-            vscode.window.showInformationMessage(`AutoDev: Session stopped. Total time: ${data.totalMinutes} minutes.`);
+            vscode.window.showInformationMessage(`ArchEngine: Session stopped. Total time: ${data.totalMinutes} minutes.`);
         }
         else {
-            vscode.window.showWarningMessage('AutoDev: No active session found to stop.');
+            vscode.window.showWarningMessage('ArchEngine: No active session found to stop.');
         }
     }
     async getTotalTime(rootPath) {
