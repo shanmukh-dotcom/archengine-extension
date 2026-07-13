@@ -14,6 +14,12 @@
   "categories": [
     "Other"
   ],
+  "capabilities": {
+    "workspaceTrust": {
+      "supported": true,
+      "description": "ArchEngine can safely scaffold projects even in restricted folders."
+    }
+  },
   "activationEvents": [],
   "main": "./out/extension/activation.js",
   "contributes": {
