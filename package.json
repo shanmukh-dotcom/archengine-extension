@@ -20,7 +20,13 @@
       "description": "ArchEngine can safely scaffold projects even in restricted folders."
     }
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:archengine.scaffoldProject",
+    "onCommand:archengine.startSession",
+    "onCommand:archengine.logNote",
+    "onCommand:archengine.generateResume",
+    "onCommand:archengine.pushToGithub"
+  ],
   "main": "./out/extension/activation.js",
   "contributes": {
     "configuration": {
@@ -54,6 +60,10 @@
       {
         "command": "archengine.generateResume",
         "title": "ArchEngine: Generate Developer Resume"
+      },
+      {
+        "command": "archengine.pushToGithub",
+        "title": "ArchEngine: Push to GitHub"
       }
     ]
   },
