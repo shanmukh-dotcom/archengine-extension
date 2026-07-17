@@ -15,7 +15,7 @@
     "Other"
   ],
   "capabilities": {
-    "workspaceTrust": {
+    "untrustedWorkspaces": {
       "supported": true,
       "description": "ArchEngine can safely scaffold projects even in restricted folders."
     }

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeminiProvider = void 0;
 const logger_1 = require("../services/logger");
+const https = require("https");
 class GeminiProvider {
     apiKey;
     constructor(apiKey) {
@@ -25,15 +26,30 @@ class GeminiProvider {
         };
         try {
             logger_1.Logger.info('GeminiProvider: Sending request to Gemini API...');
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+            const data = await new Promise((resolve, reject) => {
+                const payloadString = JSON.stringify(payload);
+                const req = https.request(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Content-Length': Buffer.byteLength(payloadString)
+                    }
+                }, (res) => {
+                    let body = '';
+                    res.on('data', chunk => body += chunk);
+                    res.on('end', () => {
+                        if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                            resolve(JSON.parse(body));
+                        }
+                        else {
+                            reject(new Error(`Gemini API error: ${res.statusCode} ${res.statusMessage}`));
+                        }
+                    });
+                });
+                req.on('error', reject);
+                req.write(payloadString);
+                req.end();
             });
-            if (!response.ok) {
-                throw new Error(`Gemini API error: ${response.statusText}`);
-            }
-            const data = await response.json();
             const jsonText = data.candidates[0].content.parts[0].text;
             const parsed = JSON.parse(jsonText);
             return {

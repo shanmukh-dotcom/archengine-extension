@@ -1,5 +1,6 @@
 import { ProjectIntent } from '../models/blueprint';
 import { Logger } from '../services/logger';
+import * as https from 'https';
 
 export class GeminiProvider {
   constructor(private apiKey: string) {}
@@ -25,20 +26,34 @@ export class GeminiProvider {
 
     try {
       Logger.info('GeminiProvider: Sending request to Gemini API...');
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+      
+      const data = await new Promise<any>((resolve, reject) => {
+        const payloadString = JSON.stringify(payload);
+        const req = https.request(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(payloadString)
+          }
+        }, (res) => {
+          let body = '';
+          res.on('data', chunk => body += chunk);
+          res.on('end', () => {
+            if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+              resolve(JSON.parse(body));
+            } else {
+              reject(new Error(`Gemini API error: ${res.statusCode} ${res.statusMessage}`));
+            }
+          });
+        });
+        req.on('error', reject);
+        req.write(payloadString);
+        req.end();
       });
 
-      if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.statusText}`);
-      }
-
-      const data = await response.json() as any;
       const jsonText = data.candidates[0].content.parts[0].text;
-      
       const parsed = JSON.parse(jsonText);
+      
       return {
         projectType: parsed.projectType || 'Generic Project',
         framework: parsed.framework || 'Node.js',

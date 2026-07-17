@@ -4,6 +4,7 @@ exports.AdvisorEngine = void 0;
 const logger_1 = require("../services/logger");
 const settings_1 = require("../services/settings");
 const templateRegistry_1 = require("./templateRegistry");
+const https = require("https");
 class AdvisorEngine {
     async generateAdvice(intent) {
         logger_1.Logger.info('AdvisorEngine generating architecture advice...');
@@ -14,15 +15,31 @@ class AdvisorEngine {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
                 const prompt = `As a Senior Software Architect, generate an ARCHITECTURE.md for a project with the following specs: Type: ${intent.projectType}, Framework: ${intent.framework}, Database: ${intent.database || 'None'}, Features: ${intent.features.join(', ')}. Include sections on Design Patterns, Scalability, and Security. Use markdown formatting.`;
                 const payload = { contents: [{ parts: [{ text: prompt }] }] };
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                const data = await new Promise((resolve, reject) => {
+                    const payloadString = JSON.stringify(payload);
+                    const req = https.request(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Content-Length': Buffer.byteLength(payloadString)
+                        }
+                    }, (res) => {
+                        let body = '';
+                        res.on('data', chunk => body += chunk);
+                        res.on('end', () => {
+                            if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                                resolve(JSON.parse(body));
+                            }
+                            else {
+                                reject(new Error(`API error: ${res.statusCode} ${res.statusMessage}`));
+                            }
+                        });
+                    });
+                    req.on('error', reject);
+                    req.write(payloadString);
+                    req.end();
                 });
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-                }
+                return data.candidates[0].content.parts[0].text;
             }
             catch (err) {
                 logger_1.Logger.warn('Gemini Advisor failed, falling back to Pure Logic Advisor...');

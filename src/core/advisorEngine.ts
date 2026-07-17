@@ -2,6 +2,7 @@ import { Logger } from '../services/logger';
 import { ProjectIntent } from '../models/blueprint';
 import { SettingsService } from '../services/settings';
 import { TemplateRegistry } from './templateRegistry';
+import * as https from 'https';
 
 export class AdvisorEngine {
   public async generateAdvice(intent: ProjectIntent): Promise<string> {
@@ -16,16 +17,32 @@ export class AdvisorEngine {
         const prompt = `As a Senior Software Architect, generate an ARCHITECTURE.md for a project with the following specs: Type: ${intent.projectType}, Framework: ${intent.framework}, Database: ${intent.database || 'None'}, Features: ${intent.features.join(', ')}. Include sections on Design Patterns, Scalability, and Security. Use markdown formatting.`;
         
         const payload = { contents: [{ parts: [{ text: prompt }] }] };
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        
+        const data = await new Promise<any>((resolve, reject) => {
+          const payloadString = JSON.stringify(payload);
+          const req = https.request(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(payloadString)
+            }
+          }, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+              if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+                resolve(JSON.parse(body));
+              } else {
+                reject(new Error(`API error: ${res.statusCode} ${res.statusMessage}`));
+              }
+            });
+          });
+          req.on('error', reject);
+          req.write(payloadString);
+          req.end();
         });
 
-        if (response.ok) {
-          const data = await response.json() as any;
-          return data.candidates[0].content.parts[0].text;
-        }
+        return data.candidates[0].content.parts[0].text;
       } catch (err) {
         Logger.warn('Gemini Advisor failed, falling back to Pure Logic Advisor...');
       }

@@ -13,101 +13,105 @@ import { ResumeGenerator } from '../core/resumeGenerator';
 import { GitEngine } from '../core/gitEngine';
 
 export function activate(context: vscode.ExtensionContext) {
-  Logger.init();
-  Logger.info('ArchEngine Project Architecture Engine Activated.');
+  try {
+    Logger.init();
+    Logger.info('ArchEngine Project Architecture Engine Activated.');
 
-  const promptEngine = new PromptEngine();
-  const blueprintEngine = new BlueprintEngine();
-  const generationEngine = new GenerationEngine();
-  const contextEngine = new ContextEngine();
-  const advisorEngine = new AdvisorEngine();
+    const promptEngine = new PromptEngine();
+    const blueprintEngine = new BlueprintEngine();
+    const generationEngine = new GenerationEngine();
+    const contextEngine = new ContextEngine();
+    const advisorEngine = new AdvisorEngine();
 
-  const scaffoldCmd = vscode.commands.registerCommand('archengine.scaffoldProject', async () => {
-    
-    const contextInfo = await contextEngine.analyzeWorkspace();
-    if (!contextInfo.rootPath) {
-      vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate or expand a project.');
-      return;
-    }
+    const scaffoldCmd = vscode.commands.registerCommand('archengine.scaffoldProject', async () => {
+      const contextInfo = await contextEngine.analyzeWorkspace();
+      if (!contextInfo.rootPath) {
+        vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate or expand a project.');
+        return;
+      }
 
-    const mode = contextInfo.isEmpty ? 'Scaffold New Project' : `Expand Project (${contextInfo.existingFramework || 'Unknown Framework'})`;
+      const mode = contextInfo.isEmpty ? 'Scaffold New Project' : `Expand Project (${contextInfo.existingFramework || 'Unknown Framework'})`;
 
-    const input = await vscode.window.showInputBox({ 
-      prompt: `[Mode: ${mode}] Describe your project/feature...`,
-      placeHolder: contextInfo.isEmpty ? 'e.g. Build an Express backend...' : 'e.g. Add JWT authentication...'
-    });
-
-    if (!input) return;
-
-    vscode.window.showInformationMessage('ArchEngine: Analyzing project intent...');
-    
-    try {
-      const intent = await promptEngine.processPrompt(input);
-      const blueprint = blueprintEngine.generateBlueprint(intent);
-      
-      // Generate Architecture Advice
-      vscode.window.showInformationMessage('ArchEngine: Generating Architectural Advice...');
-      const advice = await advisorEngine.generateAdvice(intent);
-      blueprint.files.push({
-        path: 'ARCHITECTURE.md',
-        content: advice,
-        reason: 'Architectural overview, design patterns, and scalability advice.'
+      const input = await vscode.window.showInputBox({ 
+        prompt: `[Mode: ${mode}] Describe your project/feature...`,
+        placeHolder: contextInfo.isEmpty ? 'e.g. Build an Express backend...' : 'e.g. Add JWT authentication...'
       });
 
-      // Phase 2: Route to Review UI instead of generating directly
-      await ReviewPanel.createOrShow(context.extensionPath, blueprint, generationEngine);
-    } catch (err: any) {
-      Logger.error('Scaffold failed:', err);
-      vscode.window.showErrorMessage(`ArchEngine Error: ${err.message}`);
-    }
-  });
+      if (!input) return;
 
-  const sessionEngine = new SessionEngine();
-  const sessionCmd = vscode.commands.registerCommand('archengine.startSession', async () => {
-    const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!rootPath) {
-      vscode.window.showErrorMessage('ArchEngine: Please open a folder to start a coding session.');
-      return;
-    }
+      vscode.window.showInformationMessage('ArchEngine: Analyzing project intent...');
+      
+      try {
+        const intent = await promptEngine.processPrompt(input);
+        const blueprint = blueprintEngine.generateBlueprint(intent);
+        
+        // Generate Architecture Advice
+        vscode.window.showInformationMessage('ArchEngine: Generating Architectural Advice...');
+        const advice = await advisorEngine.generateAdvice(intent);
+        blueprint.files.push({
+          path: 'ARCHITECTURE.md',
+          content: advice,
+          reason: 'Architectural overview, design patterns, and scalability advice.'
+        });
 
-    const action = await vscode.window.showQuickPick(['Start Session', 'Stop Session']);
-    if (action === 'Start Session') await sessionEngine.startSession(rootPath);
-    if (action === 'Stop Session') await sessionEngine.stopSession(rootPath);
-  });
+        // Phase 2: Route to Review UI instead of generating directly
+        await ReviewPanel.createOrShow(context.extensionPath, blueprint, generationEngine);
+      } catch (err: any) {
+        Logger.error('Scaffold failed:', err);
+        vscode.window.showErrorMessage(`ArchEngine Error: ${err.message}`);
+      }
+    });
 
-  const notesEngine = new NotesEngine();
-  const notesCmd = vscode.commands.registerCommand('archengine.logNote', async () => {
-    const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!rootPath) {
-      vscode.window.showErrorMessage('ArchEngine: Please open a folder to log developer notes.');
-      return;
-    }
+    const sessionEngine = new SessionEngine();
+    const sessionCmd = vscode.commands.registerCommand('archengine.startSession', async () => {
+      const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      if (!rootPath) {
+        vscode.window.showErrorMessage('ArchEngine: Please open a folder to start a coding session.');
+        return;
+      }
 
-    const input = await vscode.window.showInputBox({ prompt: 'Log a blocker or accomplishment for your resume...' });
-    if (input) await notesEngine.logNote(rootPath, input);
-  });
+      const action = await vscode.window.showQuickPick(['Start Session', 'Stop Session']);
+      if (action === 'Start Session') await sessionEngine.startSession(rootPath);
+      if (action === 'Stop Session') await sessionEngine.stopSession(rootPath);
+    });
 
-  const resumeGenerator = new ResumeGenerator();
-  const resumeCmd = vscode.commands.registerCommand('archengine.generateResume', async () => {
-    const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!rootPath) {
-      vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate a developer resume.');
-      return;
-    }
-    await resumeGenerator.generateResume(rootPath);
-  });
+    const notesEngine = new NotesEngine();
+    const notesCmd = vscode.commands.registerCommand('archengine.logNote', async () => {
+      const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      if (!rootPath) {
+        vscode.window.showErrorMessage('ArchEngine: Please open a folder to log developer notes.');
+        return;
+      }
 
-  const gitEngine = new GitEngine();
-  const githubCmd = vscode.commands.registerCommand('archengine.pushToGithub', async () => {
-    const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    if (!rootPath) {
-      vscode.window.showErrorMessage('ArchEngine: Please open a folder before pushing to GitHub.');
-      return;
-    }
-    await gitEngine.pushToGitHub(rootPath);
-  });
+      const input = await vscode.window.showInputBox({ prompt: 'Log a blocker or accomplishment for your resume...' });
+      if (input) await notesEngine.logNote(rootPath, input);
+    });
 
-  context.subscriptions.push(scaffoldCmd, sessionCmd, notesCmd, resumeCmd, githubCmd);
+    const resumeGenerator = new ResumeGenerator();
+    const resumeCmd = vscode.commands.registerCommand('archengine.generateResume', async () => {
+      const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      if (!rootPath) {
+        vscode.window.showErrorMessage('ArchEngine: Please open a folder to generate a developer resume.');
+        return;
+      }
+      await resumeGenerator.generateResume(rootPath);
+    });
+
+    const gitEngine = new GitEngine();
+    const githubCmd = vscode.commands.registerCommand('archengine.pushToGithub', async () => {
+      const rootPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      if (!rootPath) {
+        vscode.window.showErrorMessage('ArchEngine: Please open a folder before pushing to GitHub.');
+        return;
+      }
+      await gitEngine.pushToGitHub(rootPath);
+    });
+
+    context.subscriptions.push(scaffoldCmd, sessionCmd, notesCmd, resumeCmd, githubCmd);
+  } catch (globalError: any) {
+    vscode.window.showErrorMessage(`ArchEngine CRITICAL STARTUP ERROR: ${globalError.message}`);
+    console.error('ArchEngine Startup Error:', globalError);
+  }
 }
 
 export function deactivate() {}
